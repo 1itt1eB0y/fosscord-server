@@ -1,0 +1,23 @@
+name: Docker Image CI
+
+on:
+  watch:
+    types: started
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: |
+        docker build . --file Dockerfile --tag fosscord
+        docker export fosscord > fosscord.tar
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@v4.2.5
+      with:
+        branch: docker-tar
+        folder: .
